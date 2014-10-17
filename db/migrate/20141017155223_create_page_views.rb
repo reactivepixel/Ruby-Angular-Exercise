@@ -1,8 +1,14 @@
 class CreatePageViews < ActiveRecord::Migration
-  def change
+  def up
     create_table :page_views do |t|
-
-      t.timestamps
+    	t.string "url"
+    	t.string "referrer"
+    	t.datetime "created_at"
+    	t.text "hash"
     end
+  end
+
+  def down
+  	drop_table :page_views
   end
 end
