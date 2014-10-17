@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20141017155223) do
     t.string   "url"
     t.string   "referrer"
     t.datetime "created_at"
-    t.text     "hash"
+    t.string   "hash"
   end
 
 end

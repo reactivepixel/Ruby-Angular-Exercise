@@ -1,38 +1,54 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
+# Author: Chris Chapman chapman@apextion.com 
+# 
+	require 'digest'
+	# Min url list provided
+	seed_urls = [
+		'http://apple.com',
+		'https://apple.com',
+		'https://www.apple.com',
+		'http://developer.apple.com',
+		'http://en.wikipedia.org',
+		'http://opensource.org'
+	]
 
-  seed_urls = [
-      'http://apple.com',
-      'https://apple.com',
-      'https://www.apple.com',
-      'http://developer.apple.com',
-      'http://en.wikipedia.org',
-      'http://opensource.org'
-    ]
+	# Min Referrers list provided
+	seed_referrers = [
+		'http://apple.com',
+		'https://apple.com',
+		'https://www.apple.com',
+		'http://developer.apple.com',
+		'NULL'
+	]
 
-  seed_referrers = [
-      'http://apple.com',
-      'https://apple.com',
-      'https://www.apple.com',
-      'http://developer.apple.com',
-      'NULL'
-  ]
 
-  seeds = Array.new
+	seeds = Array.new
+	current_time = Time.now()
 
-  for seed_index in 1..1000000 do
-    value_str = "'#{seed_urls.sample}', '#{seed_referrers.sample}', DATE(NOW()-INTERVAL #{rand(0..9).to_s} DAY)"
-    #seeds.push( value_str + ", md5(#{value_str})))" )
-    seeds.push( value_str )
 
-    # puts(seed_index)
-  end
+	# For so many records avoid using ActiveRecord for model generation, assemble sql manually by creating an array of all values to be inserted
+	1000000.times do |n|
+		
+		# make randon selections from the supplied arrays
+		url = seed_urls.sample
+		referrer = seed_referrers.sample
+		
+		# select a random day between now and 31 days ago.
+		offset = current_time - 86400 * rand(0..31)
+		created_at = offset.strftime('%Y-%m-%d')
+		value_str = "'#{n+1}', '#{url}', '#{referrer}', '#{created_at}', '#{Digest::MD5.hexdigest({id: n+1, url: url, referrer: referrer, created_at: created_at}.to_s)}'" 
 
-  selection_size = 1000
-  
-  selection_size.times do |n|
-    sql = "INSERT INTO page_views (`url`, `referrer`, `created_at`) VALUES (#{seeds[n*selection_size,selection_size].join("), (")})"
-    connection = ActiveRecord::Base.connection
-    connection.execute(sql)
-  end
+		seeds.push( value_str )
+		puts("Writing value #{n}.")
+	end
+
+	puts("--Splitting and Inserting to DB--")
+
+	# Take a subsection of seeds and insert them into the db
+	1000.times do |n|
+		sql = "INSERT INTO page_views (`id`,`url`, `referrer`, `created_at`, `hash`) VALUES (#{seeds[n*1000,1000].join("), (")})"
+		#sql = "INSERT INTO page_views (`id`,`url`, `referrer`, `created_at`, `hash`) VALUES (#{seeds.join("), (")})"
+
+		# Create selection_size number of db connections. todo: Find a more elegant solution than 1000 db connections
+		connection = ActiveRecord::Base.connection
+		connection.execute(sql)
+	end
