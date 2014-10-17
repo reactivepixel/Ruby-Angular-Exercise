@@ -20,8 +20,8 @@ ActiveRecord::Schema.define(version: 20141017155223) do
     t.string   "hash"
   end
 
+  add_index "page_views", ["created_at", "url"], name: "index_page_views_on_created_at_and_url", using: :btree
   add_index "page_views", ["created_at"], name: "index_page_views_on_created_at", using: :btree
-  add_index "page_views", ["referrer"], name: "index_page_views_on_referrer", using: :btree
   add_index "page_views", ["url"], name: "index_page_views_on_url", using: :btree
 
 end

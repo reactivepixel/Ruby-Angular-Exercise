@@ -8,8 +8,8 @@ class CreatePageViews < ActiveRecord::Migration
     end
     
     add_index :page_views, :url
-    add_index :page_views, :referrer 
     add_index :page_views, :created_at
+    add_index :page_views, [:created_at, :url]
 
   end
 
