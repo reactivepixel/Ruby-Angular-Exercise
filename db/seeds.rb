@@ -46,7 +46,6 @@
 	# Take a subsection of seeds and insert them into the db
 	1000.times do |n|
 		sql = "INSERT INTO page_views (`id`,`url`, `referrer`, `created_at`, `hash`) VALUES (#{seeds[n*1000,1000].join("), (")})"
-		#sql = "INSERT INTO page_views (`id`,`url`, `referrer`, `created_at`, `hash`) VALUES (#{seeds.join("), (")})"
 
 		# Create selection_size number of db connections. todo: Find a more elegant solution than 1000 db connections
 		connection = ActiveRecord::Base.connection
