@@ -1,28 +1,11 @@
-== README
+# Eng.Exercise.2013
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This exercise is incomplete and only seeds the database.
 
-Things you may want to cover:
+## Road Block
 
-* Ruby version
+Unable to use the Sequel Gem properly. I was only able to get as far as forcing a connection through Sequel but not integrate properly with the app.
 
-* System dependencies
+## Progress
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+The Database seeds properly with 1M records of dummy data. This was accomplished by minimizing ActiveRecord's involvement with the building and running the INSERT.
